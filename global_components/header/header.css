@@ -1,0 +1,21 @@
+header {
+  display: grid;
+  grid-template: 1fr / auto auto auto;
+  width: 100vw;
+  height: 7vh;
+  position: sticky;
+  top: 0;
+  padding-left: clamp(14px, 2vw, 30px);
+  align-items: center;
+  background-color: var(--primary);
+}
+
+#logo-container {
+  display: flex;
+  width: fit-content;
+}
+
+#logo-container svg {
+  width: 2.5vh;
+
+}
