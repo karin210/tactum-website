@@ -19,8 +19,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Interfaz Humana",
-  description: "Fabricante de artículos para trabajo en computadora con diseño centrado en el usuario",
+  title: "Tactum",
+  description: "Fabricante de accesorios ergonómicos vestibles con diseño centrado en el usuario para trabajar en computadora",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body
         className={`${outfit.variable}`}>
         <Header></Header>

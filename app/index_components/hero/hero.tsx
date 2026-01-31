@@ -9,8 +9,9 @@ export default function Hero() {
         juega mejor
       </h1>
       <Image 
-        src="/GG-Gloves-holding-mouse.png" 
+        src="/GG-Gloves-holding-mouse-2.png" 
         alt="Caso de uso de los GG-Gloves sosteniendo un mouse, visto desde abajo" 
+        id="hero-img"
         width={1536} 
         height={1024}
         loading="eager" />

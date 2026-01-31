@@ -34,9 +34,9 @@ export default function Home() {
         imgSrc={data.product.ggGloves.imgSrc}
         imgAlt={data.product.ggGloves.imgAlt}
         benefits={data.product.ggGloves.benefitsSlides}
-        ></Product>
-        <h3 id="form-cta-title">¿Cómo te gustaria seguir conectado con nosotros?</h3>
-        <Form></Form>
+        >
+      </Product>
+      <Form></Form>
     </div>
   );
 }

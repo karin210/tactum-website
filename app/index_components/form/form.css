@@ -7,13 +7,24 @@
   flex-direction: column;
   padding: 10%;
   border: 2px solid;
+  gap: 15px;
   background-color: var(--neutral);
+}
+
+#form-cta h3 {
+  font-size: 19px;
+  font-weight: 600;
+  text-align: center;
 }
 
 #form-cta fieldset {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+#form-cta fieldset legend {
+  margin-bottom: 10px;
 }
 
 #form-cta fieldset p {
@@ -31,7 +42,40 @@
   display: inline-block;
 }
 
+#form-cta input {
+  background-color: white;
+}
+
+#form-cta input[type="checkbox"] {
+  margin-left: 10px;
+}
+
+#deposit-container {
+  margin-top: 35px;
+}
+
+#form-cta table {
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+#form-cta table caption {
+  font-size: 18px;
+}
+
+#form-cta table th {
+  text-align: center;
+}
+
 #form-cta button {
   background-color: var(--primary);
   color: white;
+}
+
+#follow-up-text {
+  margin-top: 30px;
+}
+
+#button-text {
+  margin: 0 auto;
 }
