@@ -49,11 +49,11 @@ export default function Form() {
 
         <div id="deposit-container">
           <h3>Depósito de: $300</h3>
-          <table border="1" cellPadding="8" cellSpacing="0">
+          <table border={1} cellPadding="8" cellSpacing="0">
             <caption>Resumen de pago</caption>
             <thead>
               <tr>
-                <th colSpan="2">GG-Gloves</th>
+                <th colSpan={2}>GG-Gloves</th>
               </tr>
             </thead>
             <tbody>
