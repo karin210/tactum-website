@@ -6,7 +6,7 @@
   padding: min(4dvh, 65px) 10%;
   justify-items: center;
   container-type: inline-size;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 
 #hero-container > * {
@@ -14,7 +14,6 @@
 }
 
 @media (max-aspect-ratio: 390 / 816) {
-
   #hero-container {
     max-height: 757px;
   }
@@ -27,13 +26,13 @@ h1 {
   text-align: center;
 }
 
-
 #hero-img {
   margin: auto;
-  aspect-ratio: 61 / 71;
+  aspect-ratio: 51 / 49;
   height: 78%;
   width: auto;
   padding: min(7%, 10px) 0;
+  object-fit: cover;
 }
 
 h2 {
@@ -42,14 +41,16 @@ h2 {
   margin: auto;
 }
 
-@media(min-width: 1024px) {
-
+@media (min-width: 1024px) {
   h2 {
     font-size: clamp(19px, 5.5cqi, 31px);
   }
-  
+
   br {
     display: none;
   }
 
+  #hero-img {
+    height: 90%;
+  }
 }
