@@ -10,7 +10,7 @@ export default function Home() {
         title: "GG-Gloves",
         subtitle:
           "Mejora tu experiencia trabajando en tu computadora o jugando videojuegos",
-        imgSrc: "/render-pointing.png",
+        imgSrc: "/gg-gloves-pointing.jpg",
         imgAlt: "Mano derecha usando los GG-Gloves apuntando a la izquierda",
         benefitsSlides: {
           iconsSrc: [
