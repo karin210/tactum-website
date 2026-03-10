@@ -1,9 +1,17 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import {
+  useActionState,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { createReservation } from "@/app/actions/create_reservation";
 import "./form.css";
 import StripeElementsProvider from "./stripetElementsProvider/stripeElementsProvider";
+import { createLead, FormState } from "@/app/actions/action";
 
 type ActionValue = "reserve" | "news";
 
@@ -11,6 +19,16 @@ export default function Form() {
   const [selectedActions, setSelectedActions] = useState<ActionValue[]>([
     "news",
   ]);
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [formState, formAction, isPending] = useActionState<
+    FormState,
+    FormData
+  >(createLead, {
+    success: null,
+    message: "",
+  });
 
   const isReserveSelected = useMemo(
     () => selectedActions.includes("reserve"),
@@ -20,6 +38,24 @@ export default function Form() {
     () => selectedActions.includes("news"),
     [selectedActions],
   );
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog || !formState.success) return;
+
+    // 1. Show the non-modal dialog
+    dialog.show();
+
+    // 2. Set the timer to close it
+    const timer = setTimeout(() => {
+      dialog.close();
+    }, 4000);
+
+    // 3. Cleanup timer if the component unmounts
+    return () => clearTimeout(timer);
+  }, [formState.success]);
 
   const legendId = useId();
   const hintId = useId();
@@ -41,10 +77,20 @@ export default function Form() {
     ? "Tus datos para apartar"
     : "Tus datos para recibir noticias";
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // Check if the form is valid using the native browser API
+    if (!formRef.current?.reportValidity()) {
+      // If invalid, stop the Server Action from firing
+      event.preventDefault();
+    }
+  };
+
   return (
     <form
       id="form-cta"
+      onSubmit={handleSubmit}
       action={createReservation}
+      ref={formRef}
       aria-labelledby="form-cta-heading"
     >
       <h3 id="form-cta-heading">Sé parte de nuestros usuarios</h3>
@@ -89,7 +135,7 @@ export default function Form() {
         </div>
       </fieldset>
 
-      <section aria-label="Datos de contacto">
+      <section aria-label="Datos de contacto" id="user-data-fields">
         <fieldset>
           <legend>{contactLegend}</legend>
 
@@ -205,11 +251,19 @@ export default function Form() {
       ) : null}
 
       {!isReserveSelected && (
-        <button type="submit" aria-label="Registrarme">
-          Registrarlme
+        <button
+          id="register-to-news-btn"
+          type="submit"
+          aria-label="Registrarme"
+          formAction={formAction}
+        >
+          {isPending ? "Guardando..." : "Registrarme"}
         </button>
       )}
       {/* El botón de envío puede vivir dentro del componente de Stripe o habilitarse aquí según el flujo */}
+      <dialog ref={dialogRef} role="status" className="dialog-popover">
+        <p>{formState.message}</p>
+      </dialog>
     </form>
   );
 }

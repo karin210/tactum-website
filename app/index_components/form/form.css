@@ -33,6 +33,12 @@
   padding: 5%;
 }
 
+#user-data-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #form-cta legend {
   font-weight: 600;
   font-size: 1rem;
@@ -78,4 +84,38 @@
 
 #button-text {
   margin: 0 auto;
+}
+
+#register-to-news-btn {
+  max-width: 325px;
+}
+
+.dialog-popover {
+  /* Position it in the bottom-right */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  margin: 0; /* Remove default browser centering */
+
+  /* Reset default <dialog> styles */
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  background: #333;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* Simple entrance animation */
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
