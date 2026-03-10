@@ -4,6 +4,7 @@
   flex-direction: column;
   height: calc(100dvh - var(--header-height));
   padding-top: 20px;
+  padding-bottom: 20px;
   align-items: center;
   background-color: var(--background);
   container-type: inline-size;
@@ -38,7 +39,7 @@
   height: auto;
   aspect-ratio: 3 / 2;
   width: 100%;
-  max-width: 900px;
+  max-width: 745px;
   flex: 1;
 }
 
@@ -47,7 +48,6 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 15% 1fr 15%;
-  padding: 8% 2%;
   gap: 7px;
   align-items: center;
   background-color: var(--light-blueish-gray);

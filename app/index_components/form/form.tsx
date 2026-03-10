@@ -21,12 +21,6 @@ export default function Form() {
     [selectedActions],
   );
 
-  // Priority: if both selected, treat as reserve (shows the superset of fields).
-  const showReserveFields = isReserveSelected;
-  const showNewsFields = !isReserveSelected && isNewsSelected;
-
-  const showAnyFields = showReserveFields || showNewsFields;
-
   const legendId = useId();
   const hintId = useId();
   const validationId = useId();
@@ -43,11 +37,9 @@ export default function Form() {
   const emailId = useId();
   const phoneId = useId();
 
-  const contactLegend = showReserveFields
+  const contactLegend = isReserveSelected
     ? "Tus datos para apartar"
     : "Tus datos para recibir noticias";
-
-  const selectionRequired = !isReserveSelected && !isNewsSelected;
 
   return (
     <form
@@ -95,88 +87,78 @@ export default function Form() {
             onChange={(e) => handleActionChange("news", e.target.checked)}
           />
         </div>
-
-        <p id={validationId} aria-live="polite">
-          {selectionRequired
-            ? "Selecciona al menos una opción para continuar."
-            : null}
-        </p>
       </fieldset>
 
       <section aria-label="Datos de contacto">
-        {showAnyFields ? (
-          <fieldset>
-            <legend>{contactLegend}</legend>
+        <fieldset>
+          <legend>{contactLegend}</legend>
 
-            <label htmlFor={firstNameId}>
-              Nombre:
+          <label htmlFor={firstNameId}>
+            Nombre:
+            <br />
+            <input
+              id={firstNameId}
+              className="user-data-input"
+              type="text"
+              name="first_name"
+              defaultValue=""
+              autoComplete="given-name"
+              required
+            />
+          </label>
+
+          {isReserveSelected && (
+            <label htmlFor={lastNameId}>
+              Apellidos:
               <br />
               <input
-                id={firstNameId}
+                id={lastNameId}
                 className="user-data-input"
                 type="text"
-                name="first_name"
+                name="last_name"
                 defaultValue=""
-                autoComplete="given-name"
+                autoComplete="family-name"
                 required
               />
             </label>
+          )}
 
-            {showReserveFields ? (
-              <label htmlFor={lastNameId}>
-                Apellidos:
-                <br />
-                <input
-                  id={lastNameId}
-                  className="user-data-input"
-                  type="text"
-                  name="last_name"
-                  defaultValue=""
-                  autoComplete="family-name"
-                  required
-                />
-              </label>
-            ) : null}
+          <label htmlFor={emailId}>
+            Correo electrónico:
+            <br />
+            <input
+              id={emailId}
+              className="user-data-input"
+              type="email"
+              name="email"
+              placeholder="ejemplo@mail.com"
+              defaultValue=""
+              autoComplete="email"
+              inputMode="email"
+              required
+            />
+          </label>
 
-            <label htmlFor={emailId}>
-              Correo electrónico:
+          {isReserveSelected && (
+            <label htmlFor={phoneId}>
+              Teléfono:
               <br />
               <input
-                id={emailId}
+                id={phoneId}
                 className="user-data-input"
-                type="email"
-                name="email"
-                placeholder="ejemplo@mail.com"
+                type="tel"
+                name="phone"
                 defaultValue=""
-                autoComplete="email"
-                inputMode="email"
+                autoComplete="tel"
+                inputMode="tel"
                 required
               />
             </label>
-
-            {showReserveFields ? (
-              <label htmlFor={phoneId}>
-                Teléfono:
-                <br />
-                <input
-                  id={phoneId}
-                  className="user-data-input"
-                  type="tel"
-                  name="phone"
-                  defaultValue=""
-                  autoComplete="tel"
-                  inputMode="tel"
-                  required
-                />
-              </label>
-            ) : null}
-          </fieldset>
-        ) : (
-          <p>Selecciona una opción arriba para ver los campos necesarios.</p>
-        )}
+          )}
+        </fieldset>
       </section>
 
-      {showReserveFields ? (
+      {isReserveSelected ? (
         <section id="deposit-container" aria-label="Pago de depósito">
           <h3>Depósito de: $300</h3>
 
@@ -222,6 +204,11 @@ export default function Form() {
         </section>
       ) : null}
 
+      {!isReserveSelected && (
+        <button type="submit" aria-label="Registrarme">
+          Registrarlme
+        </button>
+      )}
       {/* El botón de envío puede vivir dentro del componente de Stripe o habilitarse aquí según el flujo */}
     </form>
   );
