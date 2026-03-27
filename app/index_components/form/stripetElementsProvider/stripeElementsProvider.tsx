@@ -15,8 +15,15 @@ export default function StripeElementsProvider() {
     fetch("/api/payment-intent", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", // CRITICAL: Tells the server to expect JSON
       },
+      body: JSON.stringify({
+        email: "user@example.com",
+        totalPrice: 875,
+        depositAmount: 300,
+        city: "Morelia",
+        reservationDate: "2026-05-15",
+      }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));

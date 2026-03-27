@@ -8,10 +8,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { createReservation } from "@/app/actions/create_reservation";
 import "./form.css";
 import StripeElementsProvider from "./stripetElementsProvider/stripeElementsProvider";
-import { createLead, FormState } from "@/app/actions/action";
+import { createUser, FormState } from "@/app/actions/action";
 
 type ActionValue = "reserve" | "news";
 
@@ -25,7 +24,7 @@ export default function Form() {
   const [formState, formAction, isPending] = useActionState<
     FormState,
     FormData
-  >(createLead, {
+  >(createUser, {
     success: null,
     message: "",
   });
@@ -57,9 +56,21 @@ export default function Form() {
     return () => clearTimeout(timer);
   }, [formState.success]);
 
-  const legendId = useId();
+  const formId = useId();
+  const formHeadingId = useId();
+  const reserveCheckboxId = useId();
+  const newsCheckboxId = useId();
   const hintId = useId();
   const validationId = useId();
+  const firstNameId = useId();
+  const lastNameId = useId();
+  const emailId = useId();
+  const phoneId = useId();
+  const cityId = useId();
+
+  const contactLegend = isReserveSelected
+    ? "Tus datos para apartar"
+    : "Tus datos para recibir noticias";
 
   const handleActionChange = (value: ActionValue, checked: boolean) => {
     setSelectedActions((prev) => {
@@ -67,15 +78,6 @@ export default function Form() {
       return prev.filter((v) => v !== value);
     });
   };
-
-  const firstNameId = useId();
-  const lastNameId = useId();
-  const emailId = useId();
-  const phoneId = useId();
-
-  const contactLegend = isReserveSelected
-    ? "Tus datos para apartar"
-    : "Tus datos para recibir noticias";
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     // Check if the form is valid using the native browser API
@@ -87,21 +89,17 @@ export default function Form() {
 
   return (
     <form
-      id="form-cta"
+      id={`${formId}-form-cta`}
       onSubmit={handleSubmit}
-      action={createReservation}
+      action={formAction}
       ref={formRef}
-      aria-labelledby="form-cta-heading"
+      aria-labelledby={`${formHeadingId}-form-heading`}
     >
-      <h3 id="form-cta-heading">Sé parte de nuestros usuarios</h3>
-
-      <fieldset
-        aria-describedby={`${hintId} ${validationId}`}
-        aria-labelledby={legendId}
-      >
-        <legend id={legendId}>
-          ¿Cómo te gustaría continuar tu contacto con nosotros?
-        </legend>
+      <h3 id={`${formHeadingId}-form-heading`}>
+        Sé parte de nuestros usuarios
+      </h3>
+      <fieldset aria-describedby={`${hintId} ${validationId}`}>
+        <legend>¿Cómo te gustaría continuar tu contacto con nosotros?</legend>
 
         <p id={hintId}>
           Puedes elegir una o ambas opciones. Si eliges <strong>apartar</strong>
@@ -109,11 +107,11 @@ export default function Form() {
         </p>
 
         <div role="group" aria-label="Opciones de contacto">
-          <label htmlFor="action-reserve">
+          <label htmlFor={reserveCheckboxId}>
             Apartar por $300 MXN y obtener un 25% de descuento
           </label>{" "}
           <input
-            id="action-reserve"
+            id={reserveCheckboxId}
             type="checkbox"
             name="action"
             value="reserve"
@@ -121,11 +119,11 @@ export default function Form() {
             onChange={(e) => handleActionChange("reserve", e.target.checked)}
           />
           <br />
-          <label htmlFor="action-news">
+          <label htmlFor={newsCheckboxId}>
             Recibe las noticias más importantes de Interfaz Humana por e-mail
           </label>{" "}
           <input
-            id="action-news"
+            id={newsCheckboxId}
             type="checkbox"
             name="action"
             value="news"
@@ -134,13 +132,12 @@ export default function Form() {
           />
         </div>
       </fieldset>
-
       <section aria-label="Datos de contacto" id="user-data-fields">
-        <fieldset>
+        <fieldset className="user-data-fields">
           <legend>{contactLegend}</legend>
 
           <label htmlFor={firstNameId}>
-            Nombre:
+            *Nombre:
             <br />
             <input
               id={firstNameId}
@@ -170,7 +167,7 @@ export default function Form() {
           )}
 
           <label htmlFor={emailId}>
-            Correo electrónico:
+            *Correo electrónico:
             <br />
             <input
               id={emailId}
@@ -201,9 +198,19 @@ export default function Form() {
               />
             </label>
           )}
+
+          <label htmlFor={cityId}>
+            Ciudad:
+            <br />
+            <input
+              id={cityId}
+              className="user-data-input"
+              type="text"
+              name="city"
+            />
+          </label>
         </fieldset>
       </section>
-
       {isReserveSelected ? (
         <section id="deposit-container" aria-label="Pago de depósito">
           <h3>Depósito de: $300</h3>
@@ -249,18 +256,16 @@ export default function Form() {
           </p>
         </section>
       ) : null}
-
-      {!isReserveSelected && (
+      {!isReserveSelected && !formState.success && (
         <button
           id="register-to-news-btn"
           type="submit"
           aria-label="Registrarme"
-          formAction={formAction}
         >
           {isPending ? "Guardando..." : "Registrarme"}
         </button>
       )}
-      {/* El botón de envío puede vivir dentro del componente de Stripe o habilitarse aquí según el flujo */}
+
       <dialog ref={dialogRef} role="status" className="dialog-popover">
         <p>{formState.message}</p>
       </dialog>

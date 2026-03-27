@@ -1,8 +1,4 @@
-#form-cta-title {
-  font-weight: 600;
-}
-
-#form-cta {
+form[id*="-form-cta"] {
   display: flex;
   flex-direction: column;
   padding: 10%;
@@ -11,23 +7,23 @@
   background-color: var(--neutral);
 }
 
-#form-cta h3 {
+form[id*="-form-cta"] h3 {
   font-size: 19px;
   font-weight: 600;
   text-align: center;
 }
 
-#form-cta fieldset {
+form[id*="-form-cta"] fieldset {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#form-cta fieldset legend {
+form[id*="-form-cta"] fieldset legend {
   margin-bottom: 10px;
 }
 
-#form-cta fieldset p {
+form[id*="-form-cta"] fieldset p {
   background-color: var(--tertiary);
   border-radius: 5px;
   padding: 5%;
@@ -39,20 +35,20 @@
   align-items: center;
 }
 
-#form-cta legend {
+form[id*="-form-cta"] legend {
   font-weight: 600;
   font-size: 1rem;
 }
 
-#form-cta label {
+form[id*="-form-cta"] label {
   display: inline-block;
 }
 
-#form-cta input {
+form[id*="-form-cta"] input {
   background-color: white;
 }
 
-#form-cta input[type="checkbox"] {
+form[id*="-form-cta"] input[type="checkbox"] {
   margin-left: 10px;
 }
 
@@ -60,20 +56,20 @@
   margin-top: 35px;
 }
 
-#form-cta table {
+form[id*="-form-cta"] table {
   margin: 0 auto;
   margin-top: 30px;
 }
 
-#form-cta table caption {
+form[id*="-form-cta"] table caption {
   font-size: 18px;
 }
 
-#form-cta table th {
+form[id*="-form-cta"] table th {
   text-align: center;
 }
 
-#form-cta button {
+form[id*="-form-cta"] button {
   background-color: var(--primary);
   color: white;
 }

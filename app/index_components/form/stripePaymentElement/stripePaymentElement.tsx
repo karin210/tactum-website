@@ -89,8 +89,6 @@ export default function StripePaymentElement() {
       confirmParams: {
         return_url: returnUrl,
       },
-      // Redirect only when required (3DS, bank redirects, etc.)
-      redirect: "if_required",
     });
 
     if (error) {

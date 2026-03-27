@@ -49,7 +49,13 @@ export default function PagoExitoPage() {
     let cancelled = false;
 
     async function run() {
-      if (!clientSecret) {
+      // 1. Get the secret directly from the URL here
+      const params = new URLSearchParams(window.location.search);
+      const secret =
+        params.get("payment_intent_client_secret") ||
+        params.get("client_secret");
+
+      if (!secret) {
         setUi({ state: "missing_secret" });
         return;
       }
@@ -58,8 +64,7 @@ export default function PagoExitoPage() {
       if (!publishableKey) {
         setUi({
           state: "error",
-          message:
-            "Falta configurar la clave pública de Stripe (NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY).",
+          message: "Falta configurar la clave pública de Stripe.",
         });
         return;
       }
@@ -67,24 +72,19 @@ export default function PagoExitoPage() {
       try {
         const stripe = await loadStripe(publishableKey);
         if (!stripe) {
-          setUi({
-            state: "error",
-            message:
-              "No se pudo inicializar Stripe. Recarga la página e inténtalo de nuevo.",
-          });
+          setUi({ state: "error", message: "No se pudo inicializar Stripe." });
           return;
         }
 
-        const result = await stripe.retrievePaymentIntent(clientSecret);
+        // 2. Use 'secret' instead of 'clientSecret'
+        const result = await stripe.retrievePaymentIntent(secret);
 
         if (cancelled) return;
 
         if (result.error) {
           setUi({
             state: "error",
-            message:
-              result.error.message ??
-              "No se pudo recuperar el estado del pago. Intenta de nuevo.",
+            message: result.error.message ?? "Error al recuperar el pago.",
           });
           return;
         }
@@ -93,8 +93,7 @@ export default function PagoExitoPage() {
         if (!pi) {
           setUi({
             state: "error",
-            message:
-              "No se encontró información del pago. Verifica tu conexión e inténtalo de nuevo.",
+            message: "No se encontró el PaymentIntent.",
           });
           return;
         }
@@ -109,10 +108,7 @@ export default function PagoExitoPage() {
       } catch (err) {
         setUi({
           state: "error",
-          message:
-            err instanceof Error
-              ? err.message
-              : "Ocurrió un error inesperado al verificar el pago.",
+          message: err instanceof Error ? err.message : "Error inesperado.",
         });
       }
     }
@@ -122,7 +118,7 @@ export default function PagoExitoPage() {
     return () => {
       cancelled = true;
     };
-  }, [clientSecret]);
+  }, []); // clientSecret is gone, so we use an empty array or [params] if using next/navigation
 
   const content = useMemo(() => {
     if (ui.state === "loading") {
@@ -227,7 +223,8 @@ export default function PagoExitoPage() {
           body: (
             <>
               <p role="alert">
-                El pago no se completó. Intenta de nuevo con otro método de pago.
+                El pago no se completó. Intenta de nuevo con otro método de
+                pago.
               </p>
               {amountText ? (
                 <p>
