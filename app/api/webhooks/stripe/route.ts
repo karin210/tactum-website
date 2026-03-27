@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
     // Extract all data from the metadata you sent when creating the PaymentIntent
-    const { userId, type, totalPrice, depositAmount, reservationDate, city } =
+    const { type, totalPrice, depositAmount, reservationDate, city } =
       paymentIntent.metadata;
 
     const emailToUse =

@@ -132,25 +132,26 @@ export default function Form() {
           />
         </div>
       </fieldset>
-      <section aria-label="Datos de contacto" id="user-data-fields">
-        <fieldset className="user-data-fields">
-          <legend>{contactLegend}</legend>
 
-          <label htmlFor={firstNameId}>
-            *Nombre:
-            <br />
-            <input
-              id={firstNameId}
-              className="user-data-input"
-              type="text"
-              name="first_name"
-              defaultValue=""
-              autoComplete="given-name"
-              required
-            />
-          </label>
+      {!isReserveSelected && (
+        <section aria-label="Datos de contacto" id="user-data-fields">
+          <fieldset className="user-data-fields">
+            <legend>{contactLegend}</legend>
 
-          {isReserveSelected && (
+            <label htmlFor={firstNameId}>
+              *Nombre:
+              <br />
+              <input
+                id={firstNameId}
+                className="user-data-input"
+                type="text"
+                name="first_name"
+                defaultValue=""
+                autoComplete="given-name"
+                required
+              />
+            </label>
+
             <label htmlFor={lastNameId}>
               Apellidos:
               <br />
@@ -164,25 +165,23 @@ export default function Form() {
                 required
               />
             </label>
-          )}
 
-          <label htmlFor={emailId}>
-            *Correo electrónico:
-            <br />
-            <input
-              id={emailId}
-              className="user-data-input"
-              type="email"
-              name="email"
-              placeholder="ejemplo@mail.com"
-              defaultValue=""
-              autoComplete="email"
-              inputMode="email"
-              required
-            />
-          </label>
+            <label htmlFor={emailId}>
+              *Correo electrónico:
+              <br />
+              <input
+                id={emailId}
+                className="user-data-input"
+                type="email"
+                name="email"
+                placeholder="ejemplo@mail.com"
+                defaultValue=""
+                autoComplete="email"
+                inputMode="email"
+                required
+              />
+            </label>
 
-          {isReserveSelected && (
             <label htmlFor={phoneId}>
               Teléfono:
               <br />
@@ -194,23 +193,23 @@ export default function Form() {
                 defaultValue=""
                 autoComplete="tel"
                 inputMode="tel"
-                required
               />
             </label>
-          )}
 
-          <label htmlFor={cityId}>
-            Ciudad:
-            <br />
-            <input
-              id={cityId}
-              className="user-data-input"
-              type="text"
-              name="city"
-            />
-          </label>
-        </fieldset>
-      </section>
+            <label htmlFor={cityId}>
+              Ciudad:
+              <br />
+              <input
+                id={cityId}
+                className="user-data-input"
+                type="text"
+                name="city"
+              />
+            </label>
+          </fieldset>
+        </section>
+      )}
+
       {isReserveSelected ? (
         <section id="deposit-container" aria-label="Pago de depósito">
           <h3>Depósito de: $300</h3>

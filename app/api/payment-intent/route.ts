@@ -6,25 +6,45 @@ const SECRET_KEY = process.env.STRIPE_SECRET_KEY as string;
 export async function POST(req: Request) {
   const stripe = new Stripe(SECRET_KEY);
 
-  // 1. Get the data from your frontend form
-  const { userId, email, totalPrice, depositAmount, city, reservationDate } =
-    await req.json();
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: 30000, // 300.00 MXN
-    currency: "mxn",
-    receipt_email: email, // This sends the Stripe receipt automatically
-    automatic_payment_methods: { enabled: true },
-    metadata: {
+  try {
+    // 1. Get the data from your frontend form
+    const { userId, email, city, paymentIntentId } = await req.json();
+    // 1. Define the metadata separately to keep things clean
+    const metadata = {
       type: "deposit",
-      userId: userId, // Link to the Lead
-      email: email,
-      totalPrice: totalPrice.toString(),
-      depositAmount: depositAmount.toString(),
-      city: city,
-      reservationDate: reservationDate, // e.g., "2026-05-15"
-    },
-  });
+      userId: userId || "guest",
+      email: email || "pending",
+      totalPrice: "875",
+      depositAmount: "300",
+      city: city || "pending",
+      reservationDate: new Date().toISOString(),
+    };
 
-  return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+    let paymentIntent;
+
+    if (paymentIntentId) {
+      paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+        amount: 30000,
+        currency: "mxn",
+        receipt_email: email || undefined,
+        metadata: metadata,
+      });
+    } else {
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: 30000,
+        currency: "mxn",
+        receipt_email: email || undefined,
+        metadata: metadata,
+        automatic_payment_methods: { enabled: true },
+      });
+    }
+
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id, // Send ID back so the frontend can store it
+    });
+  } catch (error: any) {
+    console.error("Stripe API Error:", error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

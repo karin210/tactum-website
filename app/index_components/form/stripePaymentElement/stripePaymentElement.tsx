@@ -2,6 +2,8 @@
 
 import {
   PaymentElement,
+  LinkAuthenticationElement,
+  AddressElement,
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
@@ -44,11 +46,15 @@ function Message({
   );
 }
 
-export default function StripePaymentElement() {
+export default function StripePaymentElement({
+  paymentIntentId,
+}: {
+  paymentIntentId: string | null;
+}) {
   const stripe = useStripe();
   const elements = useElements();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState<{
     type: MessageType;
     text: string;
@@ -60,7 +66,7 @@ export default function StripePaymentElement() {
   }, []);
 
   const handlePayClick = async () => {
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !paymentIntentId) {
       setMessage({
         type: "info",
         text: "Cargando el sistema de pago. Espera un momento e intenta de nuevo.",
@@ -84,27 +90,52 @@ export default function StripePaymentElement() {
       return;
     }
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: returnUrl,
-      },
-    });
+    // 2. Extract Name, Phone, and City from the AddressElement
+    const addressElement = elements.getElement(AddressElement);
+    const { value: addressValue } = await addressElement!.getValue();
 
-    if (error) {
-      setIsSubmitting(false);
-      setMessage({
-        type: "error",
-        text:
-          error.message ??
-          "No se pudo confirmar el pago. Intenta de nuevo o usa otro método de pago.",
+    try {
+      // 3. Create the Intent with the data from Stripe Elements
+      const response = await fetch("/api/payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentIntentId: paymentIntentId, // THIS TRIGGERS THE UPDATE LOGIC
+          email: email, // From LinkAuthenticationElement state
+          name: addressValue.name,
+          phone: addressValue.phone,
+          city: addressValue.address.city,
+        }),
       });
-      return;
-    }
 
-    // If Stripe didn't redirect, we still send the user to the success page,
-    // which will verify the PaymentIntent status.
-    window.location.assign(returnUrl);
+      const { clientSecret } = await response.json();
+
+      // 4. Confirm Payment (Using the clientSecret we just got)
+      const { error } = await stripe.confirmPayment({
+        elements,
+        clientSecret, // CRITICAL: This was missing in your code
+        confirmParams: {
+          return_url: returnUrl,
+        },
+      });
+
+      // 5. Handle Stripe Confirmation Errors
+      if (error) {
+        setMessage({
+          type: "error",
+          text: error.message ?? "No se pudo confirmar el pago.",
+        });
+      } else {
+        // If no error and no redirect happened, force redirect
+        window.location.assign(returnUrl);
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+    } finally {
+      // We only stop the loading state if there was an error
+      // (otherwise the page redirects anyway)
+      setIsSubmitting(false);
+    }
   };
 
   const isDisabled = isSubmitting || !stripe || !elements;
@@ -112,6 +143,16 @@ export default function StripePaymentElement() {
   return (
     <section aria-label="Pago con Stripe">
       <div id="payment-element-container">
+        <LinkAuthenticationElement onChange={(e) => setEmail(e.value.email)} />
+
+        {/* 2. Address & Name Element */}
+        <AddressElement
+          options={{
+            mode: "shipping", // 'shipping' collects name/phone/address
+            fields: { phone: "always" }, // Force phone number collection
+            validation: { phone: { required: "always" } },
+          }}
+        />
         <PaymentElement
           id="payment-element"
           options={{
