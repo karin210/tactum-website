@@ -24,14 +24,14 @@ export async function POST(req: Request) {
 
     if (paymentIntentId) {
       paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
-        amount: 30000,
+        amount: 1000,
         currency: "mxn",
         receipt_email: email || undefined,
         metadata: metadata,
       });
     } else {
       paymentIntent = await stripe.paymentIntents.create({
-        amount: 30000,
+        amount: 1000,
         currency: "mxn",
         receipt_email: email || undefined,
         metadata: metadata,

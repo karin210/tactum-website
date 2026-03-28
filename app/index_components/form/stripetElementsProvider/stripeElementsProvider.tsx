@@ -2,45 +2,27 @@
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useEffect, useRef, useState } from "react";
 import StripePaymentElement from "../stripePaymentElement/stripePaymentElement";
 
-export default function StripeElementsProvider() {
-  const [clientSecret, setClientSecret] = useState("");
-  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
-  const hasCreatedIntent = useRef(false);
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-  ).then((res) => res);
+// loadStripe should be called outside of the component's render to avoid re-initializing Stripe on every render.
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
 
-  useEffect(() => {
-    if (hasCreatedIntent.current) return;
-    hasCreatedIntent.current = true;
-    fetch("/api/payment-intent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // CRITICAL: Tells the server to expect JSON
-      },
-      body: JSON.stringify({
-        email: "pending@example.com",
-        name: "unknown",
-        phone: "unknown",
-        city: "unknown",
-        totalPrice: 875,
-        depositAmount: 300,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-        setPaymentIntentId(data.paymentIntentId);
-      });
-  }, []);
-
+export default function StripeElementsProvider({
+  clientSecret,
+  paymentIntentId,
+}: {
+  clientSecret: string;
+  paymentIntentId: string | null;
+}) {
   if (!clientSecret) {
-    return <div></div>;
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        Cargando sistema de pago...
+      </div>
+    );
   }
-
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
       <StripePaymentElement

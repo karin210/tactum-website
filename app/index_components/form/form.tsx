@@ -40,6 +40,36 @@ export default function Form() {
 
   const dialogRef = useRef<HTMLDialogElement>(null);
 
+  const [clientSecret, setClientSecret] = useState("");
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const hasCreatedIntent = useRef(false);
+
+  useEffect(() => {
+    if (isReserveSelected && !hasCreatedIntent.current) {
+      console.log("Creating payment intent...");
+      hasCreatedIntent.current = true;
+      fetch("/api/payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "pending@example.com",
+          name: "unknown",
+          phone: "unknown",
+          city: "unknown",
+          totalPrice: 875,
+          depositAmount: 300,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setClientSecret(data.clientSecret);
+          setPaymentIntentId(data.paymentIntentId);
+        });
+    }
+  }, [isReserveSelected]);
+
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog || !formState.success) return;
@@ -244,7 +274,10 @@ export default function Form() {
           </table>
 
           <div id="patyment-element-slot" aria-label="Formulario de pago">
-            <StripeElementsProvider />
+            <StripeElementsProvider
+              clientSecret={clientSecret}
+              paymentIntentId={paymentIntentId}
+            />
           </div>
 
           <p id="follow-up-text">

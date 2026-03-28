@@ -19,7 +19,7 @@ const ReservationSchema = new Schema(
 
     // Payment References (Stripe IDs)
     stripeCustomerId: { type: String },
-    depositPaymentIntentId: { type: String }, // First payment
+    depositPaymentIntentId: { type: String, unique: true }, // First payment
     balancePaymentIntentId: { type: String }, // Second payment
 
     paymentStatus: {
