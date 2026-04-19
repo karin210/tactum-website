@@ -46,7 +46,6 @@ export default function Form() {
 
   useEffect(() => {
     if (isReserveSelected && !hasCreatedIntent.current) {
-      console.log("Creating payment intent...");
       hasCreatedIntent.current = true;
       fetch("/api/payment-intent", {
         method: "POST",

@@ -1,7 +1,7 @@
-import Hero from "./index_components/hero/hero";
-import Product from "./index_components/product/product";
-import "./index.css";
-import Form from "./index_components/form/form";
+import Hero from "../index_components/hero/hero";
+import Product from "../index_components/product/product";
+import "../index.css";
+import Form from "../index_components/form/form";
 
 export default function Home() {
   const data = {

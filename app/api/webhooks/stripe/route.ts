@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import mongoose from "mongoose";
 import connectDB from "@/lib/mongoDBConnection";
 import User from "@/lib/models/users";
 import Reservation from "@/lib/models/reservations";
@@ -20,9 +21,10 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!, // The whsec_... key
     );
-  } catch (err: any) {
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(
-      { error: `Webhook Error: ${err.message}` },
+      { error: `Webhook Error: ${errorMessage}` },
       { status: 400 },
     );
   }
@@ -38,39 +40,51 @@ export async function POST(req: Request) {
       paymentIntent.metadata.email || paymentIntent.receipt_email;
 
     await connectDB();
+    const session = await mongoose.startSession();
 
-    if (type === "deposit") {
-      // 1. Ensure the user is upgraded or created
-      const user = await User.findOneAndUpdate(
-        { email: emailToUse },
-        { $set: { userType: "customer", email: emailToUse } },
-        { upsert: true, new: true },
+    try {
+      await session.withTransaction(async () => {
+        if (type === "deposit") {
+          // 1. Ensure the user is upgraded or created
+          const user = await User.findOneAndUpdate(
+            { email: emailToUse },
+            { $set: { userType: "customer", email: emailToUse } },
+            { upsert: true, new: true, session },
+          );
+
+          // 2. Create the Reservation from scratch
+          // We use findOneAndUpdate to prevent duplicate records if the webhook fires twice
+          await Reservation.findOneAndUpdate(
+            { depositPaymentIntentId: paymentIntent.id }, // Unique identifier
+            {
+              $set: {
+                user: user._id,
+                status: "confirmed",
+                totalPrice: Number(totalPrice),
+                depositAmount: Number(depositAmount),
+                balanceAmount: Number(totalPrice) - Number(depositAmount),
+                paymentStatus: "deposit_paid",
+                reservationDate: new Date(reservationDate),
+                city: city,
+              },
+            },
+            { upsert: true, new: true, session },
+          );
+
+          console.log(`Reservation created for customer: ${emailToUse}`);
+        }
+      });
+    } catch (err) {
+      console.error("Transaction Error:", err);
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      return NextResponse.json(
+        { error: `Database Transaction Error: ${errorMessage}` },
+        { status: 500 },
       );
-
-      // 2. Create the Reservation from scratch
-      // We use findOneAndUpdate to prevent duplicate records if the webhook fires twice
-      await Reservation.findOneAndUpdate(
-        { depositPaymentIntentId: paymentIntent.id }, // Unique identifier
-        {
-          $set: {
-            user: user._id,
-            status: "confirmed",
-            totalPrice: Number(totalPrice),
-            depositAmount: Number(depositAmount),
-            balanceAmount: Number(totalPrice) - Number(depositAmount),
-            paymentStatus: "deposit_paid",
-            reservationDate: new Date(reservationDate),
-            city: city,
-          },
-        },
-        { upsert: true, new: true },
-      );
-
-      console.log(`Reservation created for customer: ${emailToUse}`);
+    } finally {
+      await session.endSession();
     }
   }
-
-  // ... handle "payoff" type similarly
 
   return NextResponse.json({ received: true });
 }
