@@ -51,6 +51,27 @@
 
 /* ── Color ──────────────────────────────────────────── */
 
+.colorPart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.colorPart + .colorPart {
+  padding-top: clamp(12px, 3cqi, 18px);
+  border-top: 1px solid var(--light-blueish-gray);
+}
+
+.colorPartLabel {
+  margin: 0;
+  font-size: clamp(12px, 2.8cqi, 14px);
+  font-weight: 500;
+  color: var(--neutral);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .colorGrid {
   display: flex;
   flex-wrap: wrap;

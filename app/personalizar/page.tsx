@@ -3,6 +3,14 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 
+const PARTS = [
+  { id: "front", label: "Frente" },
+  { id: "back", label: "Dorso de la mano" },
+  { id: "padding", label: "Acolchado de muñeca" },
+] as const;
+
+type PartId = (typeof PARTS)[number]["id"];
+
 const COLORS = [
   { name: "Negro", hex: "#1A1A1A" },
   { name: "Blanco", hex: "#F0EEEA" },
@@ -33,7 +41,16 @@ const CLOSURES = [
 ];
 
 export default function CustomizePage() {
-  const [color, setColor] = useState(COLORS[0].hex);
+  const [colors, setColors] = useState<Record<PartId, string>>({
+    front: COLORS[0].hex,
+    back: COLORS[0].hex,
+    padding: COLORS[0].hex,
+  });
+
+  function setPartColor(part: PartId, hex: string) {
+    setColors((prev) => ({ ...prev, [part]: hex }));
+  }
+
   const [fabric, setFabric] = useState<"single" | "double">("single");
   const [details, setDetails] = useState<Record<string, boolean>>({
     neon: false,
@@ -75,26 +92,34 @@ export default function CustomizePage() {
         {/* 1. Color */}
         <fieldset className={styles.section}>
           <legend className={styles.legend}>Color</legend>
-          <div className={styles.colorGrid}>
-            {COLORS.map((c) => (
-              <label key={c.hex} className={styles.colorOption} title={c.name}>
-                <input
-                  type="radio"
-                  name="color"
-                  value={c.hex}
-                  checked={color === c.hex}
-                  onChange={() => setColor(c.hex)}
-                  className={styles.srOnly}
-                />
-                <span
-                  className={`${styles.swatch} ${color === c.hex ? styles.swatchActive : ""}`}
-                  style={{ backgroundColor: c.hex }}
-                  aria-hidden="true"
-                />
-                <span className={styles.colorName}>{c.name}</span>
-              </label>
-            ))}
-          </div>
+          {PARTS.map((part) => {
+            if (part.id === "back" && fabric !== "double") return null;
+            return (
+            <div key={part.id} className={styles.colorPart}>
+              <p className={styles.colorPartLabel}>{part.label}</p>
+              <div className={styles.colorGrid}>
+                {COLORS.map((c) => (
+                  <label key={c.hex} className={styles.colorOption} title={c.name}>
+                    <input
+                      type="radio"
+                      name={`color-${part.id}`}
+                      value={c.hex}
+                      checked={colors[part.id] === c.hex}
+                      onChange={() => setPartColor(part.id, c.hex)}
+                      className={styles.srOnly}
+                    />
+                    <span
+                      className={`${styles.swatch} ${colors[part.id] === c.hex ? styles.swatchActive : ""}`}
+                      style={{ backgroundColor: c.hex }}
+                      aria-hidden="true"
+                    />
+                    <span className={styles.colorName}>{c.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            );
+          })}
         </fieldset>
 
         {/* 2. Fabric type */}
