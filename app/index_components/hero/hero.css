@@ -1,10 +1,11 @@
 #hero-container {
   box-sizing: border-box;
   display: grid;
-  grid-template: min-content 1fr 20% / 100%;
+  grid-template: min-content 1fr min-content min-content / 100%;
   height: calc(100dvh - var(--header-height));
   padding: min(4dvh, 65px) 10%;
   justify-items: center;
+  gap: clamp(10px, 2dvh, 20px);
   container-type: inline-size;
   background-color: #fafafa;
 }
@@ -39,6 +40,28 @@ h2 {
   font-size: clamp(19px, 5.5cqi, 23px);
   text-align: center;
   margin: auto;
+}
+
+#pre-order-btn {
+  display: inline-block;
+  padding: clamp(10px, 2.5cqi, 14px) clamp(28px, 7cqi, 52px);
+  background-color: var(--primary);
+  color: #fafafa;
+  font-size: clamp(14px, 3.5cqi, 20px);
+  font-weight: 600;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+#pre-order-btn:hover {
+  background-color: var(--secondary);
+  transform: scale(1.03);
+}
+
+#pre-order-btn:focus-visible {
+  outline: 3px solid var(--tertiary);
+  outline-offset: 3px;
 }
 
 @media (min-width: 1024px) {

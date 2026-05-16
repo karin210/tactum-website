@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import "./hero.css";
 
 export default function Hero() {
@@ -17,6 +18,7 @@ export default function Hero() {
         loading="eager"
       />
       <h2>Confort y experiencia</h2>
+      <Link href="/personalizar" id="pre-order-btn">Pre-ordenar</Link>
     </main>
   );
 }

@@ -60,12 +60,8 @@ export default function StripePaymentElement({
     text: string;
   } | null>(null);
 
-  const returnUrl = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return new URL("/pago/exito", window.location.origin).toString();
-  }, []);
-
   const handlePayClick = async () => {
+    const returnUrl = new URL("/pago/exito", window.location.origin).toString();
     if (!stripe || !elements || !paymentIntentId) {
       setMessage({
         type: "info",

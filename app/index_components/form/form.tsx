@@ -178,6 +178,7 @@ export default function Form() {
                 defaultValue=""
                 autoComplete="given-name"
                 required
+                suppressHydrationWarning
               />
             </label>
 
@@ -192,6 +193,7 @@ export default function Form() {
                 defaultValue=""
                 autoComplete="family-name"
                 required
+                suppressHydrationWarning
               />
             </label>
 
@@ -208,6 +210,7 @@ export default function Form() {
                 autoComplete="email"
                 inputMode="email"
                 required
+                suppressHydrationWarning
               />
             </label>
 
@@ -222,6 +225,7 @@ export default function Form() {
                 defaultValue=""
                 autoComplete="tel"
                 inputMode="tel"
+                suppressHydrationWarning
               />
             </label>
 
@@ -233,6 +237,7 @@ export default function Form() {
                 className="user-data-input"
                 type="text"
                 name="city"
+                suppressHydrationWarning
               />
             </label>
           </fieldset>
@@ -292,6 +297,7 @@ export default function Form() {
           id="register-to-news-btn"
           type="submit"
           aria-label="Registrarme"
+          suppressHydrationWarning
         >
           {isPending ? "Guardando..." : "Registrarme"}
         </button>
