@@ -6,9 +6,17 @@ import styles from "./page.module.css";
 const COLORS = [
   { name: "Negro", hex: "#1A1A1A" },
   { name: "Blanco", hex: "#F0EEEA" },
-  { name: "Azul marino", hex: "#1E3A5F" },
+  { name: "Marino", hex: "#1E3A5F" },
   { name: "Verde salvia", hex: "#3FAF85" },
   { name: "Terracota", hex: "#C4623A" },
+  { name: "Carmesí", hex: "#bf1a4b" },
+  { name: "Orquídea", hex: "#ea6bb3" },
+  { name: "Espacio experior", hex: "#3c4544" },
+  { name: "Rosa Cardo", hex: "#d8b0c1" },
+  { name: "Vino Profundo", hex: "#642137" },
+  { name: "Sombra azul", hex: "#3c5285" },
+  { name: "Lavanda", hex: "#925f8b" },
+  { name: "Glaciar", hex: "#51a0c1" },
 ];
 
 const DETAILS = [
@@ -64,7 +72,6 @@ export default function CustomizePage() {
       <h1 className={styles.heading}>Personaliza tus guantes</h1>
 
       <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-
         {/* 1. Color */}
         <fieldset className={styles.section}>
           <legend className={styles.legend}>Color</legend>
@@ -138,7 +145,10 @@ export default function CustomizePage() {
                   onChange={() => toggleDetail(d.id)}
                   className={styles.srOnly}
                 />
-                <span className={`${styles.checkmark} ${details[d.id] ? styles.checkmarkActive : ""}`} aria-hidden="true" />
+                <span
+                  className={`${styles.checkmark} ${details[d.id] ? styles.checkmarkActive : ""}`}
+                  aria-hidden="true"
+                />
                 {d.label}
               </label>
             ))}
@@ -175,11 +185,17 @@ export default function CustomizePage() {
             type="button"
             className={styles.uploadZone}
             onClick={() => fileInputRef.current?.click()}
-            aria-label={logoUrl ? "Cambiar imagen de logo" : "Subir imagen de logo"}
+            aria-label={
+              logoUrl ? "Cambiar imagen de logo" : "Subir imagen de logo"
+            }
           >
             {logoUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={logoUrl} alt="Logo personalizado" className={styles.logoPreview} />
+              <img
+                src={logoUrl}
+                alt="Logo personalizado"
+                className={styles.logoPreview}
+              />
             ) : (
               <span className={styles.uploadPlaceholder}>
                 Haz clic para subir una imagen
