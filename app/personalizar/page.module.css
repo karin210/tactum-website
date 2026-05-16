@@ -36,6 +36,156 @@
   margin-bottom: 4px;
 }
 
+/* ── Layout ─────────────────────────────────────────── */
+
+.layout {
+  display: flex;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+.formArea {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vw, 24px);
+}
+
+/* ── Image placeholders ──────────────────────────────── */
+
+.imagePlaceholderSide {
+  flex: 0 0 clamp(240px, 30vw, 400px);
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  background-color: color-mix(in srgb, var(--light-blueish-gray) 50%, transparent);
+  border: 1.5px dashed var(--light-blueish-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: calc(var(--header-height, 64px) + 24px);
+}
+
+.imagePlaceholderInline {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  background-color: color-mix(in srgb, var(--light-blueish-gray) 50%, transparent);
+  border: 1.5px dashed var(--light-blueish-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderText {
+  font-size: clamp(12px, 2.5cqi, 14px);
+  color: var(--neutral);
+  font-family: var(--font-outfit), Helvetica, sans-serif;
+}
+
+/* ── Progress bar ────────────────────────────────────── */
+
+.progressBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.stepDot {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--light-blueish-gray);
+  background: var(--background, #fff);
+  color: var(--neutral);
+  font-size: 11px;
+  font-family: var(--font-outfit), Helvetica, sans-serif;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  padding: 0;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.stepDotDone {
+  background-color: var(--tertiary);
+  border-color: var(--tertiary);
+  color: #fff;
+  cursor: pointer;
+}
+
+.stepDotActive {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background-color: var(--light-blueish-gray);
+  transition: background-color 0.3s ease;
+}
+
+.stepLineDone {
+  background-color: var(--tertiary);
+}
+
+/* ── Step navigation ─────────────────────────────────── */
+
+.stepNav {
+  display: flex;
+  gap: 12px;
+}
+
+.stepNavBtn {
+  padding: clamp(10px, 2cqi, 14px) clamp(20px, 4cqi, 32px);
+  border: 2px solid var(--light-blueish-gray);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: clamp(13px, 3cqi, 16px);
+  font-family: var(--font-outfit), Helvetica, sans-serif;
+  background: none;
+  color: var(--primary);
+  transition:
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.stepNavBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.stepNavBtn:not(:disabled):hover {
+  border-color: var(--secondary);
+}
+
+.stepNavBtnPrimary {
+  flex: 1;
+  padding: clamp(10px, 2cqi, 14px) clamp(20px, 4cqi, 32px);
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: clamp(13px, 3cqi, 16px);
+  font-family: var(--font-outfit), Helvetica, sans-serif;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.stepNavBtnPrimary:hover {
+  background-color: var(--secondary);
+}
+
 /* Screen-reader only */
 .srOnly {
   position: absolute;
@@ -350,4 +500,22 @@
 .submitBtn:focus-visible {
   outline: 3px solid var(--tertiary);
   outline-offset: 3px;
+}
+
+.submitBtnDesktop {
+  /* hidden on small screens via media query below */
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+
+@media (min-width: 860px) {
+  .progressBar { display: none; }
+  .imagePlaceholderInline { display: none; }
+  .stepNav { display: none; }
+}
+
+@media (max-width: 859px) {
+  .imagePlaceholderSide { display: none; }
+  .submitBtnDesktop { display: none; }
+  .stepHidden { display: none; }
 }
