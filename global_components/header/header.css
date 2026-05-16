@@ -17,5 +17,12 @@ header {
 
 #logo-container svg {
   width: 2.5vh;
+}
 
+.reservation-counter {
+  color: #fafafa;
+  font-size: clamp(12px, 1.5vw, 16px);
+  font-family: inherit;
+  font-weight: 500;
+  margin-left: 20px;
 }
