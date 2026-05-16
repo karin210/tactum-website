@@ -37,7 +37,7 @@ export default function Product({
           className="benefits-nav-btn"
           onClick={() => setBenefitNum(Math.max(0, benefitNum - 1))}
         ></button>
-        <div id="benefits-content">
+        <div id="benefits-content" key={benefitNum}>
           <Image
             className="benefit-icon"
             src={benefits.iconsSrc[benefitNum]}

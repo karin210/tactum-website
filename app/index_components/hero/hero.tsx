@@ -9,14 +9,14 @@ export default function Hero() {
         juega mejor
       </h1>
       <Image
-        src="/gg-gloves-v-0.2.png"
+        src="/GG-Gloves-black.png"
         alt="Imagen frontal de los GG-Gloves"
         id="hero-img"
         width={940}
         height={540}
         loading="eager"
       />
-      <h2>Guantes que no paran en la ergonomía, también traen experiencia</h2>
+      <h2>Confort y experiencia</h2>
     </main>
   );
 }
