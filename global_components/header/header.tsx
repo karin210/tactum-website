@@ -1,6 +1,35 @@
-import './header.css';
+"use client";
+
+import { useEffect, useState } from "react";
+import "./header.css";
 
 export default function Header() {
+  const [reservationCount, setReservationCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const eventSource = new EventSource("/api/reservations/count/stream");
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (typeof data.count === "number") {
+          setReservationCount(data.count);
+        }
+      } catch (err) {
+        console.error("Error parsing SSE data:", err);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error("EventSource failed:", err);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
   return (
     <header>
       <div id="logo-container">
@@ -39,7 +68,13 @@ export default function Header() {
           />
         </svg>
       </div>
-      <nav></nav>
+      <nav>
+        {reservationCount !== null && (
+          <div className="reservation-counter">
+            Reservations: {reservationCount}
+          </div>
+        )}
+      </nav>
       <div></div>
     </header>
   );
