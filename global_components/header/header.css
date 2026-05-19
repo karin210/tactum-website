@@ -5,6 +5,7 @@ header {
   height: 7vh;
   position: sticky;
   top: 0;
+  z-index: 100;
   padding-left: clamp(14px, 2vw, 30px);
   align-items: center;
   background-color: var(--primary);

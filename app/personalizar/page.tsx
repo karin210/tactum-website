@@ -27,6 +27,11 @@ const COLORS = [
   { name: "Glaciar", hex: "#51a0c1" },
 ];
 
+const PADDING_COLORS = [
+  { name: "Negro", hex: "#1A1A1A" },
+  { name: "Plata", hex: "#AFAFAF" },
+];
+
 const DETAILS = [
   { id: "neon", label: "Líneas neón" },
   { id: "hair", label: "Pelo" },
@@ -41,8 +46,8 @@ const CLOSURES = [
 ];
 
 const STEPS = [
-  { id: "color", label: "Color" },
   { id: "fabric", label: "Tipo de tela" },
+  { id: "color", label: "Color" },
   { id: "details", label: "Detalles" },
   { id: "closure", label: "Tipo de cierre" },
   { id: "logo", label: "Logo" },
@@ -105,7 +110,6 @@ export default function CustomizePage() {
 
       <div className={styles.layout}>
         <div className={styles.formArea}>
-
           {/* Progress bar — mobile only */}
           <div
             className={styles.progressBar}
@@ -117,14 +121,28 @@ export default function CustomizePage() {
                 <button
                   type="button"
                   className={`${styles.stepDot} ${i < currentStep ? styles.stepDotDone : ""} ${i === currentStep ? styles.stepDotActive : ""}`}
-                  onClick={() => { if (i < currentStep) setCurrentStep(i); }}
+                  onClick={() => {
+                    if (i < currentStep) setCurrentStep(i);
+                  }}
                   aria-current={i === currentStep ? "step" : undefined}
                   aria-label={`Paso ${i + 1}: ${step.label}`}
                   tabIndex={i >= currentStep ? -1 : 0}
                 >
                   {i < currentStep ? (
-                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
-                      <path d="M1 4l2.5 2.5L9 1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg
+                      width="10"
+                      height="8"
+                      viewBox="0 0 10 8"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M1 4l2.5 2.5L9 1"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   ) : (
                     <span aria-hidden="true">{i + 1}</span>
@@ -142,46 +160,14 @@ export default function CustomizePage() {
 
           {/* Image placeholder — mobile only */}
           <div className={styles.imagePlaceholderInline} aria-hidden="true">
-            <span className={styles.placeholderText}>Vista previa del guante</span>
+            <span className={styles.placeholderText}>
+              Vista previa del guante
+            </span>
           </div>
 
           <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-
-            {/* 1. Color */}
+            {/* 1. Fabric type */}
             <fieldset className={`${styles.section} ${hidden(0)}`}>
-              <legend className={styles.legend}>Color</legend>
-              {PARTS.map((part) => {
-                if (part.id === "back" && fabric !== "double") return null;
-                return (
-                  <div key={part.id} className={styles.colorPart}>
-                    <p className={styles.colorPartLabel}>{part.label}</p>
-                    <div className={styles.colorGrid}>
-                      {COLORS.map((c) => (
-                        <label key={c.hex} className={styles.colorOption} title={c.name}>
-                          <input
-                            type="radio"
-                            name={`color-${part.id}`}
-                            value={c.hex}
-                            checked={colors[part.id] === c.hex}
-                            onChange={() => setPartColor(part.id, c.hex)}
-                            className={styles.srOnly}
-                          />
-                          <span
-                            className={`${styles.swatch} ${colors[part.id] === c.hex ? styles.swatchActive : ""}`}
-                            style={{ backgroundColor: c.hex }}
-                            aria-hidden="true"
-                          />
-                          <span className={styles.colorName}>{c.name}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </fieldset>
-
-            {/* 2. Fabric type */}
-            <fieldset className={`${styles.section} ${hidden(1)}`}>
               <legend className={styles.legend}>Tipo de tela</legend>
               <div className={styles.fabricGrid}>
                 {(["single", "double"] as const).map((type) => (
@@ -211,6 +197,44 @@ export default function CustomizePage() {
                   </label>
                 ))}
               </div>
+            </fieldset>
+
+            {/* 2. Color */}
+            <fieldset className={`${styles.section} ${hidden(1)}`}>
+              <legend className={styles.legend}>Color</legend>
+              {PARTS.map((part) => {
+                if (part.id === "back" && fabric !== "double") return null;
+                const partColors = part.id === "padding" ? PADDING_COLORS : COLORS;
+                return (
+                  <div key={part.id} className={styles.colorPart}>
+                    <p className={styles.colorPartLabel}>{part.label}</p>
+                    <div className={styles.colorGrid}>
+                      {partColors.map((c) => (
+                        <label
+                          key={c.hex}
+                          className={styles.colorOption}
+                          title={c.name}
+                        >
+                          <input
+                            type="radio"
+                            name={`color-${part.id}`}
+                            value={c.hex}
+                            checked={colors[part.id] === c.hex}
+                            onChange={() => setPartColor(part.id, c.hex)}
+                            className={styles.srOnly}
+                          />
+                          <span
+                            className={`${styles.swatch} ${colors[part.id] === c.hex ? styles.swatchActive : ""}`}
+                            style={{ backgroundColor: c.hex }}
+                            aria-hidden="true"
+                          />
+                          <span className={styles.colorName}>{c.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </fieldset>
 
             {/* 3. Additional details */}
@@ -341,16 +365,20 @@ export default function CustomizePage() {
             </div>
 
             {/* Submit — desktop only */}
-            <button type="submit" className={`${styles.submitBtn} ${styles.submitBtnDesktop}`}>
+            <button
+              type="submit"
+              className={`${styles.submitBtn} ${styles.submitBtnDesktop}`}
+            >
               Agregar al carrito
             </button>
-
           </form>
         </div>
 
         {/* Image placeholder — desktop only */}
         <div className={styles.imagePlaceholderSide} aria-hidden="true">
-          <span className={styles.placeholderText}>Vista previa del guante</span>
+          <span className={styles.placeholderText}>
+            Vista previa del guante
+          </span>
         </div>
       </div>
     </main>

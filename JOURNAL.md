@@ -1,5 +1,9 @@
 # Journal
 
+## 2026-05-19
+- `/personalizar`: added `z-index: 100` to the sticky header so page elements (e.g. scaled color swatches) can no longer paint over it during scroll.
+- `/personalizar`: added `PADDING_COLORS` constant (Negro + Plata) so the wrist padding section only offers the two colors that the physical material comes in, while front/back keep the full 13-color palette.
+
 ## 2026-05-16
 - Added `CLAUDE.md` with project conventions (fluid design, semantic HTML, accessibility, CSS colocation with `.module.css`).
 - Created `JOURNAL.md` to track changes before each commit.

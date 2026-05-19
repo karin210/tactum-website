@@ -32,7 +32,7 @@ export default function Header() {
 
   return (
     <header>
-      <div id="logo-container">
+      <a id="logo-container" href="/">
         <svg viewBox="0 0 450 300" xmlns="http://www.w3.org/2000/svg">
           <path
             d="
@@ -67,7 +67,7 @@ export default function Header() {
             strokeLinejoin="round"
           />
         </svg>
-      </div>
+      </a>
       <nav>
         {reservationCount !== null && (
           <div className="reservation-counter">
