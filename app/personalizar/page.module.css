@@ -474,6 +474,82 @@
   color: var(--neutral);
 }
 
+/* ── Measurements ───────────────────────────────────── */
+
+.measurementsHint {
+  margin: 0;
+  font-size: clamp(12px, 2.5cqi, 14px);
+  color: var(--neutral);
+  line-height: 1.5;
+}
+
+.measurementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: clamp(16px, 4cqi, 28px);
+}
+
+.measurementField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.measurementLabel {
+  font-size: clamp(14px, 3.5cqi, 18px);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.measurementDesc {
+  margin: 0 0 8px;
+  font-size: clamp(11px, 2.5cqi, 13px);
+  color: var(--neutral);
+  line-height: 1.4;
+}
+
+.measurementInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.measurementInput {
+  box-sizing: border-box;
+  width: clamp(90px, 20cqi, 140px);
+  padding: clamp(10px, 2.5cqi, 14px) clamp(12px, 2.5cqi, 16px);
+  border: 2px solid var(--light-blueish-gray);
+  border-radius: 10px;
+  font-size: clamp(14px, 3.5cqi, 18px);
+  font-family: var(--font-outfit), Helvetica, sans-serif;
+  background: #fff;
+  color: var(--primary);
+  transition: border-color 0.2s ease;
+  /* remove browser spin arrows */
+  appearance: textfield;
+}
+
+.measurementInput::-webkit-outer-spin-button,
+.measurementInput::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.measurementInput:focus {
+  outline: none;
+  border-color: var(--tertiary);
+}
+
+.measurementInput::placeholder {
+  color: var(--neutral);
+}
+
+.measurementUnit {
+  font-size: clamp(13px, 3cqi, 16px);
+  font-weight: 500;
+  color: var(--neutral);
+}
+
 /* ── Submit ─────────────────────────────────────────── */
 
 .submitBtn {

@@ -3,6 +3,7 @@
 ## 2026-05-19
 - `/personalizar`: added `z-index: 100` to the sticky header so page elements (e.g. scaled color swatches) can no longer paint over it during scroll.
 - `/personalizar`: added `PADDING_COLORS` constant (Negro + Plata) so the wrist padding section only offers the two colors that the physical material comes in, while front/back keep the full 13-color palette.
+- `/personalizar`: added a "Medidas" step (last in the wizard) with two number inputs — anchura and largo of the hand in cm — so orders can be made to measure.
 
 ## 2026-05-16
 - Added `CLAUDE.md` with project conventions (fluid design, semantic HTML, accessibility, CSS colocation with `.module.css`).

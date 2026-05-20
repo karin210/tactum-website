@@ -52,6 +52,7 @@ const STEPS = [
   { id: "closure", label: "Tipo de cierre" },
   { id: "logo", label: "Logo" },
   { id: "name", label: "Nombre" },
+  { id: "size", label: "Medidas" },
 ] as const;
 
 export default function CustomizePage() {
@@ -77,6 +78,8 @@ export default function CustomizePage() {
   const [closure, setClosure] = useState("elastic");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [gloveName, setGloveName] = useState("");
+  const [handWidth, setHandWidth] = useState("");
+  const [handHeight, setHandHeight] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const prevLogoUrl = useRef<string | null>(null);
@@ -337,6 +340,60 @@ export default function CustomizePage() {
               <span className={styles.charCount} aria-live="polite">
                 {gloveName.length}/30
               </span>
+            </fieldset>
+
+            {/* 7. Hand size */}
+            <fieldset className={`${styles.section} ${hidden(6)}`}>
+              <legend className={styles.legend}>Medidas de la mano</legend>
+              <p className={styles.measurementsHint}>
+                Mide tu mano con una cinta métrica para un ajuste perfecto.
+              </p>
+              <div className={styles.measurementsGrid}>
+                <div className={styles.measurementField}>
+                  <label className={styles.measurementLabel} htmlFor="hand-width">
+                    Anchura
+                  </label>
+                  <p className={styles.measurementDesc}>
+                    La parte más ancha de la palma
+                  </p>
+                  <div className={styles.measurementInputWrap}>
+                    <input
+                      id="hand-width"
+                      type="number"
+                      value={handWidth}
+                      onChange={(e) => setHandWidth(e.target.value)}
+                      min="5"
+                      max="25"
+                      step="0.1"
+                      placeholder="8.5"
+                      className={styles.measurementInput}
+                    />
+                    <span className={styles.measurementUnit} aria-hidden="true">cm</span>
+                  </div>
+                </div>
+                <div className={styles.measurementField}>
+                  <label className={styles.measurementLabel} htmlFor="hand-height">
+                    Largo
+                  </label>
+                  <p className={styles.measurementDesc}>
+                    Desde la muñeca hasta el dedo más largo
+                  </p>
+                  <div className={styles.measurementInputWrap}>
+                    <input
+                      id="hand-height"
+                      type="number"
+                      value={handHeight}
+                      onChange={(e) => setHandHeight(e.target.value)}
+                      min="10"
+                      max="30"
+                      step="0.1"
+                      placeholder="18.0"
+                      className={styles.measurementInput}
+                    />
+                    <span className={styles.measurementUnit} aria-hidden="true">cm</span>
+                  </div>
+                </div>
+              </div>
             </fieldset>
 
             {/* Step navigation — mobile only */}
