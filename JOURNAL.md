@@ -1,5 +1,8 @@
 # Journal
 
+## 2026-05-21
+- `app/api/webhooks/stripe/route.ts`: updated Stripe `apiVersion` from `"2023-10-16"` to `"2025-12-15.clover"` to match the version required by the installed `stripe` package and fix the Vercel build TypeScript error.
+
 ## 2026-05-19
 - `/personalizar`: added `z-index: 100` to the sticky header so page elements (e.g. scaled color swatches) can no longer paint over it during scroll.
 - `/personalizar`: added `PADDING_COLORS` constant (Negro + Plata) so the wrist padding section only offers the two colors that the physical material comes in, while front/back keep the full 13-color palette.
